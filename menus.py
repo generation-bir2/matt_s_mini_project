@@ -4,6 +4,7 @@ from product_menu_functions import *
 from courier_menu_functions import *
 from os import system
 
+#Could use ("""") as opposed to \n to make it easier on the eyes
 def order_menu(orders):
     system('cls')
     #Order menu
