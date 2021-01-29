@@ -62,3 +62,75 @@ def update_order_status(orders):
     system('cls')
     return orders
             
+#updates order
+def update_order(orders):
+    system('cls')
+    for order in orders:
+        print(f'Order: {order}')
+    print()
+    order_to_update = input('Enter the name of the order you would like to update or 0 to cancel: ').title()
+    for order in orders:
+        if order_to_update in order.keys():
+            menu = True
+            while menu == True:
+                system('cls')
+                print('0)Change Name\n1)Change Address\n2)Change Phone Number')
+                print()
+                while True:
+                    try:
+                        user = int(input('Enter Option [0|1|2]: '))
+                    except ValueError:
+                        print('Please Enter [0|1|2].')
+                    else:
+                        break
+                if user == 0:
+                    system('cls')               
+                    new_name = input('Enter the new name: ').title()
+                    system('cls')
+                    order[new_name] = order.pop(order_to_update)
+                    print('Name has been updated')
+                    time.sleep(2)
+                    break
+                elif user == 1:
+                    system('cls')
+                    new_address = input('Enter the new address: ')
+                    order[order_to_update]['Address'] = new_address
+                    system('cls')
+                    print('Address has been updated')
+                    time.sleep(2)
+                    break
+                elif user == 2:
+                    system('cls')
+                    new_number = input('Enter the new phone number: ')
+                    order[order_to_update]['Phone Number'] = new_number
+                    system('cls')
+                    print('Phone number has been updated')
+                    time.sleep(2)
+                    break
+        elif order_to_update not in order.keys() and order_to_update != '0':
+            system('cls')
+            print('Name not in list')
+            time.sleep(2)
+    system('cls')
+    return orders
+
+def delete_order(orders):
+    system('cls')
+    for order in orders:
+        print(f'Order: {order}')
+    print()
+    del_order = input('Enter name on order to delete or 0 to cancel: ').title()
+    for order in orders:
+        if del_order in order.keys():
+            system('cls')
+            del order[del_order]
+            print('Order has been deleted')
+            time.sleep(2)
+        elif del_order not in order.keys() and del_order != '0':
+            system('cls')
+            print('Order not in list')
+            time.sleep(2)
+    system('cls')
+    return orders
+            
+    

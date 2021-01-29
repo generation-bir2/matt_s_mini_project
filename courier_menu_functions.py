@@ -27,10 +27,10 @@ def delete_courier(couriers):
     system('cls')
     del_item = input('Enter the courier you would like to delete or 0 to cancel: ').title()
     system('cls')
-    if del_item in couriers and not '0':
+    if del_item in couriers and del_item != '0':
         del couriers[couriers.index(del_item)]
         print('Courier has been deleted.')
-    elif del_item not in couriers and not '0':
+    elif del_item not in couriers and del_item != '0':
         print('Courier not in list.')
     time.sleep(2)
     system('cls')
@@ -41,9 +41,13 @@ def add_new_courier(couriers):
     print()
     system('cls')
     new_courier = input('Enter the name of the new courier: ').title()
-    couriers.append(new_courier)
-    system('cls')
-    print('Your courier has been added.')
+    if new_courier not in couriers:
+        couriers.append(new_courier)
+        system('cls')
+        print('Your product has been added.')
+    else:
+        system('cls')
+        print('Product already in list')
     #pause and show message
     time.sleep(2)
     system('cls')

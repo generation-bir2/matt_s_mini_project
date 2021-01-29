@@ -1,1 +1,1 @@
-#This is my mini project, it monitors the orders of a food service
+#This is my mini project, it monitors the orders of a food servicec
