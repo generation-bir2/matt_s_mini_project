@@ -3,6 +3,7 @@ from order_menu_functions import *
 from product_menu_functions import *
 from courier_menu_functions import *
 from os import system
+import time
 
 #Could use ("""") as opposed to \n to make it easier on the eyes
 def order_menu(orders):
@@ -42,7 +43,10 @@ def order_menu(orders):
         elif user == 5:
             orders = delete_order(orders)
         else:
+            system('cls')
             print('please select one of the options.')
+            time.sleep(2)
+            system('cls')
     return orders
         
 def courier_menu(couriers):
@@ -79,7 +83,10 @@ def courier_menu(couriers):
         elif user == 4: 
             couriers = delete_courier(couriers)
         else:
+            system('cls')
             print('please select one of the options.')
+            time.sleep(2)
+            system('cls')
     return couriers
     
 
@@ -117,7 +124,10 @@ def product_menu(products):
         elif user == 4: 
             products = delete_product(products)
         else:
+            system('cls')
             print('please select one of the options.')
+            time.sleep(2)
+            system('cls')
     return products
             
             
@@ -138,9 +148,9 @@ def main_menu(products, couriers):
         #if user inputs string except a Value Error
         while True:
             try:
-                user = int(input('Enter Option [0|1|2]: '))
+                user = int(input('Enter Option [0|1|2|3]: '))
             except ValueError:
-                print('Please Enter [0|1|2].')
+                print('Please Enter [0|1|2|3].')
             else:
                 break
         print()

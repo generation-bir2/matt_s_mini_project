@@ -9,14 +9,14 @@ def replace_courier(couriers):
     #replaces item in list
     replace_item = input('Enter the name of the courier you would like to replace or 0 to cancel: ').title()
     system('cls')
-    if replace_item in couriers and not '0':
-        new_item = input('Enter the name of the courier you would like to replace them with: ').title()
+    if replace_item in couriers and replace_item != '0':
+        new_item = input(f'Enter the name of the courier you would like to replace {replace_item} with: ').title()
         system('cls')
         couriers[couriers.index(replace_item)] = new_item
-        print('Courier has been replaced.')
+        print(f'{replace_item} has been replaced with {new_item}.')
         time.sleep(2)
-    elif replace_item not in couriers and not '0':
-        print('Courier not in list.')
+    elif replace_item not in couriers and replace_item != '0':
+        print(f'{replace_item} not in list.')
         time.sleep(2)
     system('cls')
     return couriers
@@ -29,9 +29,9 @@ def delete_courier(couriers):
     system('cls')
     if del_item in couriers and del_item != '0':
         del couriers[couriers.index(del_item)]
-        print('Courier has been deleted.')
+        print(f'{del_item} has been deleted.')
     elif del_item not in couriers and del_item != '0':
-        print('Courier not in list.')
+        print(f'{del_item} not in list.')
     time.sleep(2)
     system('cls')
     return couriers
@@ -44,10 +44,10 @@ def add_new_courier(couriers):
     if new_courier not in couriers:
         couriers.append(new_courier)
         system('cls')
-        print('Your product has been added.')
+        print(f'{new_courier} has been added.')
     else:
         system('cls')
-        print('Product already in list')
+        print(f'{new_courier} already in list')
     #pause and show message
     time.sleep(2)
     system('cls')
