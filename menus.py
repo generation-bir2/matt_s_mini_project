@@ -116,7 +116,8 @@ def product_menu(products):
         elif user == 1:
             #print product list
             system('cls')
-            print(f'Products: {products}')
+            for product in products:
+                print(f'Products: {product}')
         elif user == 2:
             products = add_new_product(products)
         elif user == 3:
@@ -132,8 +133,7 @@ def product_menu(products):
             
             
     
-def main_menu(products, couriers):
-    orders = []
+def main_menu(products, couriers, orders):
     system('cls')
     #Main Menu
     menu = True
@@ -169,4 +169,4 @@ def main_menu(products, couriers):
             print('Must select one of the options.')
             print()
         system('cls')
-    return products, couriers
+    return products, couriers, orders
