@@ -3,7 +3,7 @@ from os import system
 import time 
 
 #Create new order
-def create_new_order(orders):
+def create_new_order(orders, products):
     system('cls')
     name = input('Please enter the name of the customer: ').title()
     system('cls')
@@ -11,11 +11,30 @@ def create_new_order(orders):
     system('cls')
     phone_number = input('Please enter the phone number of the customer: ')
     system('cls')
+    #####################################################################
+    items = []
+    item = 1
+    while item != 0:
+        for count, product in enumerate(products, start= 1):
+            print(f'{count}: {product["Name"]}')
+        while True:
+            try:
+                item = int(input('Enter the index of the product you want to order, or 0 to continue: '))
+            except ValueError:
+                print('Please select a number')
+            else:
+                break
+        system('cls')
+        if item != 0:
+            items.append(item)
+    system('cls')
+    #####################################################################
     order_dict= {
         'Name': name,
         'Address': address,
         'Phone Number': phone_number,
-        'Status': 'Preparing'}
+        'Status': 'Preparing',
+        'items': items}
     orders.append(order_dict)
     print('Your order has been added')
     time.sleep(2)
