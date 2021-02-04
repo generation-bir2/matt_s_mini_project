@@ -5,7 +5,6 @@ from courier_menu_functions import *
 from os import system
 import time
 
-#Could use ("""") as opposed to \n to make it easier on the eyes
 def order_menu(orders):
     system('cls')
     #Order menu
@@ -59,7 +58,7 @@ def courier_menu(couriers):
         print('Select one of the following options')
         print()
         #Menu Options
-        print('0)Return to main menu\n1)Show couriers\n2)Create new courier \n3)Replace courier\n4)Delete courier')
+        print('0)Return to main menu\n1)Show couriers\n2)Create new courier \n3)Update courier\n4)Delete courier')
         print()
         #user enters option, if value error re-enter option
         while True:
@@ -75,7 +74,8 @@ def courier_menu(couriers):
         elif user == 1:
             system('cls')
             #prints courier list
-            print(f'Couriers: {couriers}')
+            for courier in couriers:
+                print(f'Courier: {courier["Name"]} {courier["Phone Number"]}')
         elif user == 2:
             couriers = add_new_courier(couriers)
         elif user == 3:
@@ -117,7 +117,7 @@ def product_menu(products):
             #print product list
             system('cls')
             for product in products:
-                print(f'Products: {product}')
+                print(f'Product: {product["Name"]} £{product["Price"]}')
         elif user == 2:
             products = add_new_product(products)
         elif user == 3:

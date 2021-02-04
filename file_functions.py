@@ -18,8 +18,6 @@ def create_product_list():
 
 def save_products(products):
     with open('product_file.csv', 'w') as product_file:
-        # for product in products:
-        #     product_file.write(f'{product}\n')
         fieldname = ['Name', 'Price']
         writer = csv.DictWriter(product_file, fieldnames=fieldname)
         writer.writeheader()
@@ -30,8 +28,9 @@ def create_courier_list():
     couriers = []
     try:
         with open('courier_file.csv','r') as courier_file:
-            for courier in courier_file:
-                couriers.append(courier.rstrip())
+            csv_reader = csv.DictReader(courier_file)
+            for row in csv_reader:
+                couriers.append(row)
     except FileNotFoundError:
         system('cls')
         print('No courier file exists')
@@ -40,15 +39,18 @@ def create_courier_list():
 
 def save_couriers(couriers):
     with open('courier_file.csv', 'w') as courier_file:
-        for courier in couriers:
-            courier_file.write(f'{courier}\n')
+        fieldname = ['Name','Phone Number']
+        writer = csv.DictWriter(courier_file, fieldnames=fieldname)
+        writer.writeheader()
+        writer.writerows(couriers)
     
 def create_order_list():
     orders = []
     try:
         with open('order_file.csv','r') as order_file:
-            for order in order_file:
-                orders.append(order.rstrip())
+            csv_reader = csv.DictReader(order_file)
+            for row in csv_reader:
+                orders.append(row)
     except FileNotFoundError:
         system('cls')
         print('No order file exists')
@@ -57,5 +59,7 @@ def create_order_list():
 
 def save_orders(orders):
     with open('order_file.csv', 'w') as order_file:
-        for order in orders:
-            order_file.write(f'{order}\n')
+        fieldname = []
+        writer = csv.DictWriter(order_file, fieldnames=fieldname)
+        writer.writeheader()
+        writer.writerows(orders)
