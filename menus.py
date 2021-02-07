@@ -5,7 +5,7 @@ from courier_menu_functions import *
 from os import system
 import time
 
-def order_menu(orders, products):
+def order_menu(orders, products, couriers):
     system('cls')
     #Order menu
     menu = True
@@ -30,15 +30,14 @@ def order_menu(orders, products):
             menu = False
         elif user == 1:
             system('cls')
-            #prints courier list
-            for order in orders:
-                print(f'Order: {order}')
+            for i in range(len(orders)):
+                print(orders[i])
         elif user == 2:
-            orders = create_new_order(orders, products)
+            orders = create_new_order(orders, products, couriers)
         elif user == 3:
             orders = update_order_status(orders)
         elif user == 4: 
-            orders = update_order(orders)
+            orders = update_order(orders, products, couriers)
         elif user == 5:
             orders = delete_order(orders)
         else:
@@ -163,7 +162,7 @@ def main_menu(products, couriers, orders):
         elif user == 2:
             couriers = courier_menu(couriers)
         elif user == 3:
-            orders = order_menu(orders, products)
+            orders = order_menu(orders, products, couriers)
         #if user selects anything else
         else:
             print('Must select one of the options.')

@@ -3,7 +3,7 @@ from os import system
 import time 
 
 #Create new order
-def create_new_order(orders, products):
+def create_new_order(orders, products, couriers):
     system('cls')
     name = input('Please enter the name of the customer: ').title()
     system('cls')
@@ -11,8 +11,7 @@ def create_new_order(orders, products):
     system('cls')
     phone_number = input('Please enter the phone number of the customer: ')
     system('cls')
-    #####################################################################
-    items = []
+    product_idx = []
     item = 1
     while item != 0:
         for count, product in enumerate(products, start= 1):
@@ -26,19 +25,32 @@ def create_new_order(orders, products):
                 break
         system('cls')
         if item != 0:
-            items.append(item)
+            product_idx.append(item)
+    courier_idx = []
+    for count, courier in enumerate(couriers, start= 1):
+        print(f'{count}: {courier["Name"]}')
+    while True:
+        try:
+            item = int(input('Enter the index of the courier you want to add to the order: '))
+        except ValueError:
+            print('Please select a number')
+        else:
+            break
+    courier_idx.append(item)    
     system('cls')
-    #####################################################################
     order_dict= {
         'Name': name,
         'Address': address,
         'Phone Number': phone_number,
         'Status': 'Preparing',
-        'items': items}
+        'Items': product_idx,
+        'Courier': courier_idx
+        }
     orders.append(order_dict)
     print('Your order has been added')
     time.sleep(2)
     system('cls')
+    
     return orders
 
 #update order status
@@ -63,7 +75,7 @@ def update_order_status(orders):
                     else:
                         break
                 if user == 0:
-                        order['Status'] == 'Out for delivery'
+                        order['Status'] = 'Out for delivery'
                         system('cls')
                         print('Status updated')
                         time.sleep(2)
@@ -78,7 +90,6 @@ def update_order_status(orders):
         system('cls')
         print(f'{order_name} not in list')
         time.sleep(2)
-
     system('cls')
     
     return orders
@@ -86,54 +97,61 @@ def update_order_status(orders):
             
             
 #updates order
-def update_order(orders):
+def update_order(orders, products,couriers):
     res = False
     system('cls')
     for order in orders:
         print(f'Order: {order}')
-    print()
+        print()
     order_to_update = input('Enter the name of the order you would like to update or 0 to cancel: ').title()
     for order in orders:
         if order_to_update == order['Name']:
-            menu = True
-            while menu == True:
-                system('cls')
-                print('0)Change Name\n1)Change Address\n2)Change Phone Number')
-                print()
+            system('cls')
+            name = input('Please enter the name of the customer or leave blank to skip: ').title()
+            system('cls')
+            address = input('Please enter the address of the customer or leave blank to skip: ')
+            system('cls')
+            phone_number = input('Please enter the phone number of the customer or leave blank to skip: ')
+            system('cls')
+            product_idx = []
+            item = 1
+            while item != 0:
+                for count, product in enumerate(products, start= 1):
+                    print(f'{count}: {product["Name"]}')
                 while True:
                     try:
-                        user = int(input('Enter Option [0|1|2]: '))
+                        item = int(input('Enter the index of the product you want to order, or 0 to continue: '))
+                    except '':
+                        break
                     except ValueError:
-                        print('Please Enter [0|1|2].')
+                        print('Please select a number')
                     else:
                         break
-                if user == 0:
-                    system('cls')               
-                    new_name = input('Enter the new name: ').title()
-                    system('cls')
-                    order['Name'] = new_name
-                    print('Name has been updated')
-                    time.sleep(2)
-                    res = True
+                system('cls')
+                if item != 0:
+                    product_idx.append(item)
+            courier_idx = []
+            for count, courier in enumerate(couriers, start= 1):
+                print(f'{count}: {courier["Name"]}')
+            while True:
+                try:
+                    item = int(input('Enter the index of the courier you want to add to the order or 0 to continue: '))
+                except ValueError:
+                    print('Please select a number')
+                else:
                     break
-                elif user == 1:
-                    system('cls')
-                    new_address = input('Enter the new address: ')
-                    order['Address'] = new_address
-                    system('cls')
-                    print('Address has been updated')
-                    time.sleep(2)
-                    res = True
-                    break
-                elif user == 2:
-                    system('cls')
-                    new_number = input('Enter the new phone number: ')
-                    order['Phone Number'] = new_number
-                    system('cls')
-                    print('Phone number has been updated')
-                    time.sleep(2)
-                    res = True
-                    break
+            if item != 0:
+                courier_idx.append(item) 
+            if name != '':
+                order['Name'] = name
+            if address != '':
+                order['Address'] = address
+            if phone_number != '':
+                order['Phone Number'] = phone_number
+            if product_idx != []:
+                order['Items'] = product_idx
+            if courier_idx != []:
+                order['Courier'] = courier_idx
     if order_to_update not in order.values() and order_to_update != '0' and res == False:
         system('cls')
         print(f'{order_to_update} not in list')

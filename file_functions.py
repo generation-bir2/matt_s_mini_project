@@ -59,7 +59,14 @@ def create_order_list():
 
 def save_orders(orders):
     with open('order_file.csv', 'w') as order_file:
-        fieldname = []
+        fieldname = [
+            'Name',
+            'Address',
+            'Phone Number',
+            'Status',
+            'Items',
+            'Courier'
+        ]
         writer = csv.DictWriter(order_file, fieldnames=fieldname)
         writer.writeheader()
         writer.writerows(orders)
