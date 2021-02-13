@@ -4,8 +4,11 @@ from product_menu_functions import *
 from courier_menu_functions import *
 from os import system
 import time
+import pymysql
 
-def order_menu(orders, products, couriers):
+
+
+def order_menu(cur):
     system('cls')
     #Order menu
     menu = True
@@ -31,7 +34,7 @@ def order_menu(orders, products, couriers):
         elif user == 1:
             system('cls')
             for i in range(len(orders)):
-                print(orders[i])
+                print(f'Order {i}: orders[i]')
         elif user == 2:
             orders = create_new_order(orders, products, couriers)
         elif user == 3:
@@ -45,9 +48,8 @@ def order_menu(orders, products, couriers):
             print('please select one of the options.')
             time.sleep(2)
             system('cls')
-    return orders
         
-def courier_menu(couriers):
+def courier_menu(cur, con):
     system('cls')
     #Courier Menu
     menu = True
@@ -72,24 +74,24 @@ def courier_menu(couriers):
             menu = False
         elif user == 1:
             system('cls')
-            #prints courier list
+            cur.execute('SELECT name, phone_number FROM couriers')
+            couriers = cur.fetchall()
             for courier in couriers:
-                print(f'Courier: {courier["Name"]} {courier["Phone Number"]}')
+                print(f"Courier: {courier['name']} {courier['phone_number']}")
         elif user == 2:
-            couriers = add_new_courier(couriers)
+            add_new_courier(cur, con)
         elif user == 3:
-            couriers = replace_courier(couriers)
+            replace_courier(cur, con)
         elif user == 4: 
-            couriers = delete_courier(couriers)
+            delete_courier(cur, con)
         else:
             system('cls')
             print('please select one of the options.')
             time.sleep(2)
             system('cls')
-    return couriers
     
 
-def product_menu(products):
+def product_menu(cur, con):
     system('cls')
     #Product Menu
     menu = True
@@ -115,24 +117,25 @@ def product_menu(products):
         elif user == 1:
             #print product list
             system('cls')
+            cur.execute('SELECT name, price FROM products')
+            products = cur.fetchall()
             for product in products:
-                print(f'Product: {product["Name"]} £{product["Price"]}')
+                print(f"Product: {product['name']} £{product['price']}")
         elif user == 2:
-            products = add_new_product(products)
+            add_new_product(cur, con)
         elif user == 3:
-            products = replace_product(products)
+            replace_product(cur, con)
         elif user == 4: 
-            products = delete_product(products)
+            delete_product(cur, con)
         else:
             system('cls')
             print('please select one of the options.')
             time.sleep(2)
             system('cls')
-    return products
             
             
     
-def main_menu(products, couriers, orders):
+def main_menu(cur, con):
     system('cls')
     #Main Menu
     menu = True
@@ -158,14 +161,13 @@ def main_menu(products, couriers, orders):
             menu = False
         #if user selects 1
         elif user == 1:
-            products = product_menu(products)
+            product_menu(cur, con)
         elif user == 2:
-            couriers = courier_menu(couriers)
+            courier_menu(cur, con)
         elif user == 3:
-            orders = order_menu(orders, products, couriers)
+            order_menu(cur, con)
         #if user selects anything else
         else:
             print('Must select one of the options.')
             print()
         system('cls')
-    return products, couriers, orders

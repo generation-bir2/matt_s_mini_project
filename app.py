@@ -1,24 +1,38 @@
 '''main app'''
-from file_functions import *
 from menus import *
 
-#create product list to pass through program
-products = create_product_list()
+import pymysql
+import os
+from dotenv import load_dotenv
+# Load environment variables from .env file
 
-#creates courier list to pass through the program
-couriers = create_courier_list()
+load_dotenv()
+host = os.environ.get("mysql_host")
+user = os.environ.get("mysql_user")
+password = os.environ.get("mysql_pass")
+database = os.environ.get("mysql_db")
+# Establish a database connection
+con = pymysql.connect(
+    host = host,
+    user = user,
+    password = password,
+    database = database
+)
 
-#creates order list to pass through the program
-orders = create_order_list()
+cur = con.cursor(pymysql.cursors.DictCursor)
 
-#run main menu passing courier data and product data
-products, couriers, orders = main_menu(products, couriers, orders)
+cur.execute('''CREATE TABLE IF NOT EXISTS products (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    price FLOAT NOT NULL,
+    PRIMARY KEY(id)
+    );''')
 
-#saves products to txt file
-save_products(products)
+cur.execute('''CREATE TABLE IF NOT EXISTS couriers (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    phone_number VARCHAR(30) NOT NULL,
+    PRIMARY KEY(id)
+    );''')
 
-#saves couriers to txt file
-save_couriers(couriers)
-
-#saves orders to txt file
-save_orders(orders)
+cur = main_menu(cur, con)
