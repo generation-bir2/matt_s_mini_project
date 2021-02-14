@@ -59,7 +59,6 @@ def delete_product(cur, con):
         print(f'{del_item} not in list.')
     time.sleep(2)
     system('cls')
-    return products
 
 def add_new_product(cur, con):
     #adds new item to product list as a dictionary

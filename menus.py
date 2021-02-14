@@ -8,7 +8,7 @@ import pymysql
 
 
 
-def order_menu(cur):
+def order_menu(cur, con):
     system('cls')
     #Order menu
     menu = True
@@ -33,16 +33,18 @@ def order_menu(cur):
             menu = False
         elif user == 1:
             system('cls')
-            for i in range(len(orders)):
-                print(f'Order {i}: orders[i]')
+            cur.execute('SELECT * FROM orders')
+            orders = cur.fetchall()
+            for order in orders:
+                print(f"Order: {order} ")
         elif user == 2:
-            orders = create_new_order(orders, products, couriers)
+            create_new_order(cur, con)
         elif user == 3:
-            orders = update_order_status(orders)
+            update_order_status(cur, con)
         elif user == 4: 
-            orders = update_order(orders, products, couriers)
+            update_order(cur, con)
         elif user == 5:
-            orders = delete_order(orders)
+            delete_order(cur, con)
         else:
             system('cls')
             print('please select one of the options.')
@@ -74,10 +76,10 @@ def courier_menu(cur, con):
             menu = False
         elif user == 1:
             system('cls')
-            cur.execute('SELECT name, phone_number FROM couriers')
+            cur.execute('SELECT id, name, phone_number FROM couriers')
             couriers = cur.fetchall()
             for courier in couriers:
-                print(f"Courier: {courier['name']} {courier['phone_number']}")
+                print(f"Courier ID: {courier['id']}          {courier['name']} {courier['phone_number']}")
         elif user == 2:
             add_new_courier(cur, con)
         elif user == 3:
@@ -117,10 +119,10 @@ def product_menu(cur, con):
         elif user == 1:
             #print product list
             system('cls')
-            cur.execute('SELECT name, price FROM products')
+            cur.execute('SELECT id, name, price FROM products')
             products = cur.fetchall()
             for product in products:
-                print(f"Product: {product['name']} £{product['price']}")
+                print(f"Product ID: {product ['id']}          {product['name']} £{product['price']}")
         elif user == 2:
             add_new_product(cur, con)
         elif user == 3:
