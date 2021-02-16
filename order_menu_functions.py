@@ -86,6 +86,7 @@ def update_order_status(cur, con):
                         con.commit()
                         system('cls')
                         print('Status updated')
+                        
                         time.sleep(2)
                         menu = False
                 elif user == 1:
@@ -133,7 +134,7 @@ def update_order(cur, con):
                     print(f"ID:{product['id']}          {product['name']}")
                 while True:
                     try:
-                        item = int(input('Enter the  of the product you want to order, or 0 to continue: '))
+                        item = int(input('Enter the id of the product you want to order, or 0 to continue: '))
                     except '':
                         break
                     except ValueError:
@@ -150,7 +151,7 @@ def update_order(cur, con):
                 print(f"ID:{courier['id']}          {courier['name']}")
             while True:
                 try:
-                    item = int(input('Enter the index of the courier you want to add to the order or 0 to continue: '))
+                    item = int(input('Enter the id of the courier you want to add to the order or 0 to continue: '))
                 except ValueError:
                     print('Please select a number')
                 else:
@@ -188,7 +189,6 @@ def update_order(cur, con):
         time.sleep(2)
     system('cls')
 
-    return orders
 
 def delete_order(cur, con):
     system('cls')
@@ -214,7 +214,6 @@ def delete_order(cur, con):
         time.sleep(2)
     
     system('cls')
-    
-    return orders
+
             
     
