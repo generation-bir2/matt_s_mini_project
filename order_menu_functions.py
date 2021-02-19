@@ -1,27 +1,34 @@
 '''order menu functions'''
 from os import system
 import time 
+from tabulate import tabulate
 
 #Create new order
 def create_new_order(cur, con):
     system('cls')
-    name = input('Please enter the name of the customer: ').title()
-    system('cls')
-    address = input('Please enter the address of the customer: ')
-    system('cls')
-    phone_number = input('Please enter the phone number of the customer: ')
+    cur.execute('SELECT customer_name, customer_id FROM customers')
+    customers = cur.fetchall()
+    print(tabulate(customers, headers = 'keys' ))
+    print()
+    customer = 0
+    while True:
+        try:
+            customer = int(input('Enter the id of the customer you want to add to the order: '))
+        except ValueError:
+            print('Please select a number')
+        else:
+            break
     system('cls')
     product_idx = []
     item = 1
     cur.execute('SELECT id, name FROM products')
     products = cur.fetchall()
     while item != 0:
-        for product in products:
-            print(f"ID:{product['id']}          {product['name']}")
+        print(tabulate(products, headers = 'keys' ))
         print()
         while True:
             try:
-                item = int(input('Enter the id of the product you want to order, or 0 to continue: '))
+                item = int(input('Enter the id of the product you want to order or 0 to continue: '))
             except ValueError:
                 print('Please select a number')
             else:
@@ -32,8 +39,7 @@ def create_new_order(cur, con):
     courier_idx = 0
     cur.execute('SELECT id, name FROM couriers')
     couriers = cur.fetchall()
-    for courier in couriers:
-        print(f"ID:{courier['id']}          {courier['name']}")
+    print(tabulate(couriers, headers = 'keys' ))
     print()
     while True:
         try:
@@ -45,8 +51,8 @@ def create_new_order(cur, con):
     courier_idx = item  
     status = 'Preparing'
     product_idx = (f'{product_idx}')
-    cur.execute('''INSERT INTO orders(customer_name, customer_address, customer_phone, courier, status, items)
-                    VALUES(%s,%s,%s,%s,%s,%s)''',(name, address, phone_number, courier_idx , status, product_idx))
+    cur.execute('''INSERT INTO orders(customer_id, courier, status, items)
+                    VALUES(%s,%s,%s,%s)''',(customer, courier_idx , status, product_idx))
     con.commit()
     system('cls')
     print('Your order has been added')
@@ -58,12 +64,14 @@ def create_new_order(cur, con):
 def update_order_status(cur, con):
     res = True
     system('cls')
-    cur.execute('SELECT customer_name FROM orders')
+    cur.execute('''SELECT o.customer_id, c.customer_name
+                    FROM orders o
+                    JOIN customers c
+                    ON o.customer_id = c.customer_id''')
     orders = cur.fetchall()
-    for order in orders:
-        print(f"Order: {order['customer_name']}")
+    print(tabulate(orders, headers = 'keys' ))
     print()
-    order_name = input('Enter the name of the person who\'s order you would like to update or 0 to cancel: ').title()
+    order_name = int(input('Enter the id of order you would like to update or 0 to cancel: '))
     for order in orders:
         if order_name in order.values():
             menu = True
@@ -82,7 +90,7 @@ def update_order_status(cur, con):
                 if user == 0:
                         cur.execute(f'''UPDATE orders
                                         SET status = 'Out for delivery'
-                                        WHERE customer_name = '{order_name}' ''')
+                                        WHERE customer_id = {order_name} ''')
                         con.commit()
                         system('cls')
                         print('Status updated')
@@ -92,13 +100,13 @@ def update_order_status(cur, con):
                 elif user == 1:
                         cur.execute(f'''UPDATE orders
                                         SET  status = 'Delivered'
-                                        WHERE customer_name = '{order_name}' ''')
+                                        WHERE customer_id = {order_name} ''')
                         con.commit()
                         system('cls')
                         print('Status updated')
                         time.sleep(2)
                         menu = False
-    if res == True and order_name != '0':
+    if res == True and order_name != 0:
         system('cls')
         print(f'{order_name} not in list')
         time.sleep(2)
@@ -110,33 +118,41 @@ def update_order_status(cur, con):
 def update_order(cur, con):
     res = False
     system('cls')
-    cur.execute('SELECT * FROM orders')
+    cur.execute('''SELECT o.customer_id, c.customer_name
+                    FROM orders o
+                    JOIN customers c
+                    ON o.customer_id = c.customer_id''')
     orders = cur.fetchall()
+    print(tabulate(orders, headers = 'keys' ))
+    print()
+    order_to_update = int(input('Enter the id of the order you would like to update or 0 to cancel: '))
+    system('cls')
     for order in orders:
-        print(f'Order: {order}')
-        print()
-    order_to_update = input('Enter the name of the order you would like to update or 0 to cancel: ').title()
-    for order in orders:
-        if order_to_update == order['customer_name']:
-            system('cls')
-            name = input('Please enter the name of the customer or leave blank to skip: ').title()
-            system('cls')
-            address = input('Please enter the address of the customer or leave blank to skip: ')
-            system('cls')
-            phone_number = input('Please enter the phone number of the customer or leave blank to skip: ')
+        if order_to_update == order['customer_id']:
+            res = True
+            cur.execute('SELECT customer_id, customer_name FROM customers')
+            customers = cur.fetchall()
+            print(tabulate(customers, headers = 'keys' ))
+            print()
+            customer = 0
+            while True:
+                try:
+                    customer = int(input('Enter the id of the customer you want to add to the order or 0 to continue: '))
+                except ValueError:
+                    print('Please select a number')
+                else:
+                    break
             system('cls')
             product_idx = []
             item = 1
             while item != 0:
                 cur.execute('SELECT id, name FROM products')
                 products = cur.fetchall()
-                for product in products:
-                    print(f"ID:{product['id']}          {product['name']}")
+                print(tabulate(products, headers = 'keys' ))
+                print()
                 while True:
                     try:
-                        item = int(input('Enter the id of the product you want to order, or 0 to continue: '))
-                    except '':
-                        break
+                        item = int(input('Enter the id of the product you want to order or 0 to continue: '))
                     except ValueError:
                         print('Please select a number')
                     else:
@@ -144,46 +160,33 @@ def update_order(cur, con):
                 system('cls')
                 if item != 0:
                     product_idx.append(item)
-            courier_idx = []
             cur.execute('SELECT id, name FROM couriers')
             couriers = cur.fetchall()
-            for courier in couriers:
-                print(f"ID:{courier['id']}          {courier['name']}")
+            print(tabulate(couriers, headers = 'keys' ))
+            print()
+            courier = 0
             while True:
                 try:
-                    item = int(input('Enter the id of the courier you want to add to the order or 0 to continue: '))
+                    courier = int(input('Enter the id of the courier you want to add to the order or 0 to continue: '))
                 except ValueError:
                     print('Please select a number')
                 else:
                     break
-            if item != 0:
-                courier_idx.append(item) 
-            if name != '':
+            if customer != 0:
                 cur.execute(f'''UPDATE orders
-                                SET customer_name = '{name}'
-                                WHERE customer_name = '{order_to_update}' ''')
-                con.commit()
-            if address != '':
-                cur.execute(f'''UPDATE orders
-                                SET customer_address = '{address}'
-                                WHERE customer_name = '{order_to_update}' ''')
-                con.commit()
-            if phone_number != '':
-                cur.execute(f'''UPDATE orders
-                                SET customer_phone = '{phone_number}'
-                                WHERE customer_name = '{order_to_update}' ''')
-                con.commit()
+                                SET customer_id = '{customer}'
+                                WHERE customer_id = '{order_to_update}' ''')
             if product_idx != []:
                 cur.execute(f'''UPDATE orders
                                 SET items = '{product_idx}'
-                                WHERE customer_name = '{order_to_update}' ''')
+                                WHERE customer_id = '{order_to_update}' ''')
                 con.commit()
-            if courier_idx != []:
+            if courier != 0:
                 cur.execute(f'''UPDATE orders
-                                SET courier = '{courier_idx}'
-                                WHERE customer_name = '{order_to_update}' ''')
+                                SET courier = '{courier}'
+                                WHERE customer_id = '{order_to_update}' ''')
                 con.commit()
-    if order_to_update not in order.values() and order_to_update != '0' and res == False:
+    if order_to_update != 0 and res == False:
         system('cls')
         print(f'{order_to_update} not in list')
         time.sleep(2)
@@ -195,20 +198,19 @@ def delete_order(cur, con):
     res = False
     cur.execute('SELECT * FROM orders')
     orders = cur.fetchall()
-    for order in orders:
-        print(f'Order: {order}')
+    print(tabulate(orders, headers = 'keys' ))
     print()
-    del_order = input('Enter name on order to delete or 0 to cancel: ').title()
+    del_order = int(input('Enter order id to delete or 0 to cancel: '))
     for order in orders:
         if del_order in order.values():
             system('cls')
             cur.execute(f'''DELETE FROM orders
-                            WHERE customer_name = '{del_order}' ''')
+                            WHERE id = '{del_order}' ''')
             con.commit()
             print('Order has been deleted')
             time.sleep(2)
             res = True
-    if del_order not in order.values() and del_order != '0' and res == False:
+    if del_order != 0 and res == False:
         system('cls')
         print(f'{del_order} not in list')
         time.sleep(2)

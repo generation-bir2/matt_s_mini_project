@@ -35,15 +35,24 @@ cur.execute('''CREATE TABLE IF NOT EXISTS couriers (
     PRIMARY KEY(id)
     );''')
 
-cur.execute('''CREATE TABLE IF NOT EXISTS orders (
-    id INT NOT NULL AUTO_INCREMENT,
+cur.execute('''CREATE TABLE IF NOT EXISTS customers(
+    customer_id INT NOT NULL AUTO_INCREMENT,
     customer_name VARCHAR(30) NOT NULL,
     customer_address VARCHAR(250) NOT NULL,
     customer_phone VARCHAR(30) NOT NULL,
+    PRIMARY KEY(customer_id));''')
+
+cur.execute('''CREATE TABLE IF NOT EXISTS orders (
+    id INT NOT NULL AUTO_INCREMENT,
+    customer_id INT NOT NULL,
     courier INT NOT NULL,
     status VARCHAR(50) NOT NULL,
     items  VARCHAR(50) NOT NULL,
-    PRIMARY KEY(id)
-    );''')
+    PRIMARY KEY(id),
+    FOREIGN KEY(customer_id) REFERENCES customers(customer_id));''')
 
-cur = main_menu(cur, con)
+
+cur, con = main_menu(cur, con)
+
+cur.close()
+con.close()
