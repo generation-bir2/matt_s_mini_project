@@ -1,5 +1,6 @@
 from os import system
 import time
+from tabulate import tabulate
 
 def add_customer(cur,con):
     system('cls')
@@ -22,8 +23,7 @@ def update_customer(cur, con):
     system('cls')
     cur.execute('SELECT * FROM customers')
     customers = cur.fetchall()
-    for customer in customers:
-        print(f'Order ID: {customer["customer_id"]}          {customer["customer_name"]}')
+    print(tabulate(customers, headers = 'keys' ))
     print()
     id = int(input('Enter the id of the order you would like to update or 0 to cancel: '))
     for customer in customers:
@@ -42,15 +42,15 @@ def update_customer(cur, con):
                 con.commit()
                 res = True
             if address != '':
-                cur.execute(f'''UPDATE orders
+                cur.execute(f'''UPDATE customers
                                 SET customer_address = '{address}'
-                                WHERE customer_name = '{id}' ''')
+                                WHERE customer_id = '{id}' ''')
                 con.commit()
                 res = True
             if phone_number != '':
-                cur.execute(f'''UPDATE orders
+                cur.execute(f'''UPDATE customers
                                 SET customer_phone = '{phone_number}'
-                                WHERE customer_name = '{id}' ''')
+                                WHERE customer_id = '{id}' ''')
                 con.commit()
                 res = True
     if id != 0 and res == False:
@@ -65,8 +65,7 @@ def delete_customer(cur, con):
     res = False
     cur.execute('SELECT * FROM customers')
     customers = cur.fetchall()
-    for customer in customers:
-        print(f' Customer ID: {customer["customer_id"]}         {customer["customer_name"]}')
+    print(tabulate(customers, headers = 'keys' ))
     print()
     del_customer = int(input('Enter id of customer to delete or 0 to cancel: '))
     for customer in customers:
@@ -75,7 +74,7 @@ def delete_customer(cur, con):
             cur.execute(f'''DELETE FROM customers
                             WHERE customer_id = '{del_customer}' ''')
             con.commit()
-            print('Order has been deleted')
+            print('Customer has been deleted')
             time.sleep(2)
             res = True
     if del_customer != 0 and res == False:
